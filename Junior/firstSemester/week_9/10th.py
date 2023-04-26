@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+
 x = np.random.rand(30)
 y = np.random.rand(30)
 colors = np.random.rand(30)

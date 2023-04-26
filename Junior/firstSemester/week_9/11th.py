@@ -1,6 +1,7 @@
 import numpy as np
 import itertools
 import matplotlib.pyplot as plt
+
 x = np.random.rand(100)
 y = np.random.rand(100)
 colors = itertools.cycle(["red", "green", "blue", "yellow", "pink", "orange", "purple", "brown", "cyan", "magenta"])
