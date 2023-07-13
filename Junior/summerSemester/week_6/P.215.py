@@ -4,49 +4,6 @@ from bs4 import BeautifulSoup
 import re
 
 
-def get_book_info(row):
-    title = row['도서명']
-    author = row['저자']
-    pub = row['출판사']
-    year = row['발행년도']
-    url = 'http://www.yes24.com/Product/Search?domain=BOOK&query={}'
-
-    r = requests.get(url.format(row['ISBN']))
-    soup = BeautifulSoup(r.text, 'html.parser')
-    try:
-        if pd.isna(title):
-            title = soup.find('a', attrs={'class': 'gd_name'}) \
-                .get_text()
-    except AttributeError:
-        pass
-
-    try:
-        if pd.isna(author):
-            authors = soup.find('span', attrs={'class': 'info_auth'}) \
-                .find_all('a')
-            author_list = [auth.get_text() for auth in authors]
-            author = ','.join(author_list)
-    except AttributeError:
-        pass
-
-    try:
-        if pd.isna(pub):
-            pub = soup.find('span', attrs={'class': 'info_pub'}) \
-                .find('a') \
-                .get_text()
-    except AttributeError:
-        pass
-
-    try:
-        if year == -1:
-            year_str = soup.find('span', attrs={'class': 'info_date'}) \
-                .get_text()
-            year = re.findall(r'\d{4}', year_str)[0]
-    except AttributeError:
-        pass
-
-    return title, author, pub, year
-
 def data_fixing(ns_book4):
     ns_book4 = ns_book4.astype({'도서권수': 'int32', '대출건수': 'int32'})
 
@@ -67,8 +24,6 @@ def data_fixing(ns_book4):
 
     na_rows = ns_book5['도서명'].isna() | ns_book5['저자'].isna() \
               | ns_book5['출판사'].isna() | ns_book5['발행년도'].eq(-1)
-    updated_sample = ns_book5[na_rows].apply(get_book_info,
-                                             axis=1, result_type='expand')
 
     ns_book6 = ns_book5.dropna(subset=['도서명', '저자', '출판사'])
     ns_book6 = ns_book6[ns_book6['발행년도'] != -1]
