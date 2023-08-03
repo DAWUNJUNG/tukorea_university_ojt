@@ -113,7 +113,7 @@ def gpt_learning():
             # 4번 반복 학습
             prompt_ele.send_keys(f"질문에 '{data}'이 포함되어 있으면 '{learning_data[data]}'라고 답해")
             prompt_ele.send_keys(Keys.ENTER)
-            if 0 <= i < 4:
+            if i == 3 and data == list(learning_data.keys())[-1]:
                 target_wait(driver, 'xpath', new_chat_xpath, 60)
 
     driver.quit()
