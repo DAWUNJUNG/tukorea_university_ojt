@@ -110,7 +110,7 @@ def gpt_learning():
     new_chat_xpath = """//div[text()='Regenerate']"""
     for data in learning_data:
         no_run = False
-        if data != list(learning_data.keys())[-1]:
+        if data == list(learning_data.keys())[-1]:
             no_run = True
         for i in range(4):
             # 4번 반복 학습
@@ -118,7 +118,7 @@ def gpt_learning():
             prompt_ele.send_keys(Keys.ENTER)
             if i == 3 and no_run:
                 continue
-            else :
+            else:
                 target_wait(driver, 'xpath', new_chat_xpath, 60)
 
     driver.quit()
