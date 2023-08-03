@@ -46,10 +46,10 @@ def upload(file: UploadFile = File(...)):
 def gpt_learning():
     # 크로미움 설정
     chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument('headless')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('window-size=1920x1080')
-    chrome_options.add_argument("disable-gpu")
+    # chrome_options.add_argument('headless')
+    # chrome_options.add_argument('--no-sandbox')
+    # chrome_options.add_argument('window-size=1920x1080')
+    # chrome_options.add_argument("disable-gpu")
     chrome_options.add_argument('lang=ko_KR')
     chrome_options.add_argument('ignore-certificate-errors')  # SSL 관련 오류 무시
     chrome_options.add_argument('ignore-ssl-errors')  # SSL 관련 오류 무시
@@ -109,11 +109,16 @@ def gpt_learning():
 
     new_chat_xpath = """//div[text()='Regenerate']"""
     for data in learning_data:
+        no_run = False
+        if data != list(learning_data.keys())[-1]:
+            no_run = True
         for i in range(4):
             # 4번 반복 학습
             prompt_ele.send_keys(f"질문에 '{data}'이 포함되어 있으면 '{learning_data[data]}'라고 답해")
             prompt_ele.send_keys(Keys.ENTER)
-            if i == 3 and data == list(learning_data.keys())[-1]:
+            if i == 3 and no_run:
+                continue
+            else :
                 target_wait(driver, 'xpath', new_chat_xpath, 60)
 
     driver.quit()
