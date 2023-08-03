@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>web service</title>
+</head>
+<body>
+<form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" id="uploadFile" accept="text/csv"/>
+</form>
+<button onclick="upload()">업로드</button>
+</body>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script>
+    function upload() {
+        const fileInput = $("#uploadFile")[0];
+
+        if (fileInput.files.length === 0) {
+            alert("파일은 선택해주세요");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+
+        $.ajax({
+            type: "POST",
+            url: "/upload",
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (rtn) {
+                const message = rtn.data.values[0];
+            }
+        });
+    }
+</script>
+</html>
