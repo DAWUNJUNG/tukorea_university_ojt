@@ -14,6 +14,7 @@ from selenium.webdriver.common.keys import Keys
 import chromedriver_autoinstaller
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.service import Service
 
 app = FastAPI()
 view_dir = Jinja2Templates(directory="view")
@@ -44,21 +45,24 @@ def upload(file: UploadFile = File(...)):
 
 
 def gpt_learning():
+    # 크롬 설치
+    chromedriver_autoinstaller.install()
+
+    # 서비스 내용 설정
+    service = Service()
+
     # 크로미움 설정
     chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument('headless')
-    chrome_options.add_argument('--no-sandbox')
+    # chrome_options.add_argument('headless')
+    # chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('window-size=1920x1080')
-    chrome_options.add_argument("disable-gpu")
+    # chrome_options.add_argument("disable-gpu")
     chrome_options.add_argument('lang=ko_KR')
     chrome_options.add_argument('ignore-certificate-errors')  # SSL 관련 오류 무시
     chrome_options.add_argument('ignore-ssl-errors')  # SSL 관련 오류 무시
 
-    # 크롬 설치
-    chromedriver_autoinstaller.install()
-
     # 셀레니움 드라이버 설정
-    driver = webdriver.Chrome('chromedriver', options=chrome_options)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get('https://chat.openai.com/auth/login')
 
     # 로그인 버튼 클릭
@@ -97,7 +101,7 @@ def gpt_learning():
     if os.environ.get('GPT4'):
         gpt_4_btn_xpath = """//span[text()='GPT-4']"""
         target_wait(driver, 'xpath', gpt_4_btn_xpath, 30)
-        driver.find_element(By.XPATH, next_btn_xpath).click()
+        driver.find_element(By.XPATH, gpt_4_btn_xpath).click()
 
     # 새로운 채팅 실행
     new_chat_xpath = """//a[text()='New chat']"""
