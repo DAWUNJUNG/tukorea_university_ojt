@@ -46,10 +46,10 @@ def upload(file: UploadFile = File(...)):
 def gpt_learning():
     # 크로미움 설정
     chrome_options = webdriver.ChromeOptions()
-    # chrome_options.add_argument('headless')
-    # chrome_options.add_argument('--no-sandbox')
-    # chrome_options.add_argument('window-size=1920x1080')
-    # chrome_options.add_argument("disable-gpu")
+    chrome_options.add_argument('headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('window-size=1920x1080')
+    chrome_options.add_argument("disable-gpu")
     chrome_options.add_argument('lang=ko_KR')
     chrome_options.add_argument('ignore-certificate-errors')  # SSL 관련 오류 무시
     chrome_options.add_argument('ignore-ssl-errors')  # SSL 관련 오류 무시
@@ -92,6 +92,12 @@ def gpt_learning():
     # Done 버튼 클릭
     target_wait(driver, 'xpath', done_btn_xpath, 30)
     driver.find_element(By.XPATH, done_btn_xpath).click()
+
+    # GPT4 사용 여부에 따라 사용하는 엔진 수정
+    if os.environ.get('GPT4'):
+        gpt_4_btn_xpath = """//span[text()='GPT-4']"""
+        target_wait(driver, 'xpath', gpt_4_btn_xpath, 30)
+        driver.find_element(By.XPATH, next_btn_xpath).click()
 
     # 새로운 채팅 실행
     new_chat_xpath = """//a[text()='New chat']"""
