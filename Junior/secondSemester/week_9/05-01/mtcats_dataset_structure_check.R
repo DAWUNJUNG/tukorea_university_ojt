@@ -1,0 +1,2 @@
+nrow(mtcars)
+str(mtcars)
