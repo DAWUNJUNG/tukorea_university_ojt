@@ -1,2 +1,0 @@
-nrow(mtcars)
-str(mtcars)
